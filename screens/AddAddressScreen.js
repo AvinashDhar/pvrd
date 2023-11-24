@@ -13,25 +13,26 @@ import { Entypo } from "@expo/vector-icons";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { UserType } from "../UserContext";
+import {BASE_API_URL} from '@env';
 
 const AddAddressScreen = () => {
   const navigation = useNavigation();
   const [addresses, setAddresses] = useState([]);
   const { userId, setUserId } = useContext(UserType);
-  console.log("userId", userId);
+  
   useEffect(() => {
     fetchAddresses();
   }, []);
   const fetchAddresses = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/addresses/${userId}`
+        `${BASE_API_URL}/api/v1/addresses/${userId}`
       );
       const { addresses } = response.data;
 
       setAddresses(addresses);
     } catch (error) {
-      console.log("error", error);
+      console.log("error while fetching address: ", error);
     }
   };
   //refresh the addresses when the component comes to the focus ie basically when we navigate back
@@ -40,7 +41,7 @@ const AddAddressScreen = () => {
       fetchAddresses();
     }, [])
   );
-  console.log("addresses", addresses);
+ 
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={{ marginTop: 50 }}>
       <View

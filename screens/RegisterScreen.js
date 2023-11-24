@@ -13,52 +13,55 @@ import React, { useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
+import { BASE_API_URL } from "@env";
+import { primaryColor } from "../assets/colors";
 
 const RegisterScreen = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [password, setPassword] = useState("");
   const navigation = useNavigation();
   const handleRegister = () => {
     const user = {
       name: name,
       email: email,
+      phoneNumber: phoneNumber,
       password: password,
     };
-
+  
     // send a POST  request to the backend API to register the user
     axios
-      .post("http://localhost:8000/register", user)
+      .post(`${BASE_API_URL}/api/v1/users/register`, user)
       .then((response) => {
-        console.log(response);
         Alert.alert(
           "Registration successful",
           "You have been registered Successfully"
         );
         setName("");
         setEmail("");
+        setPhoneNumber("")
         setPassword("");
       })
       .catch((error) => {
         Alert.alert(
           "Registration Error",
-          "An error occurred while registering"
+          "An error occurred while registering, Please try after some time"
         );
         console.log("registration failed", error);
       });
   };
   return (
     <SafeAreaView
-      style={{ flex: 1, backgroundColor: "white", alignItems: "center",marginTop:50  }}
+      style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}
     >
       <View>
         <Image
           style={{ width: 150, height: 100 }}
-          source={{
-            uri: "https://assets.stickpng.com/thumbs/6160562276000b00045a7d97.png",
-          }}
+          source={require('../assets/pvrd-logo.png')}
         />
       </View>
 
@@ -103,7 +106,7 @@ const RegisterScreen = () => {
                 width: 300,
                 fontSize: name ? 16 : 16,
               }}
-              placeholder="enter your name"
+              placeholder="Enter Your Name"
             />
           </View>
 
@@ -134,7 +137,34 @@ const RegisterScreen = () => {
                 width: 300,
                 fontSize: password ? 16 : 16,
               }}
-              placeholder="enter your Email"
+              placeholder="Enter Your Email"
+            />
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 5,
+              backgroundColor: "#D0D0D0",
+              paddingVertical: 5,
+              borderRadius: 5,
+              marginTop: 30,
+            }}
+          >
+            <FontAwesome style={{ marginLeft: 8 }} name="phone" size={24} color="gray" />
+
+            <TextInput
+              value={phoneNumber}
+              onChangeText={(text) => setPhoneNumber(text)}
+              style={{
+                color: "gray",
+                marginVertical: 10,
+                width: 300,
+                fontSize: 16,
+              }}
+              placeholder="Enter Your Phone Number"
+              numeric
+              keyboardType={'numeric'}
             />
           </View>
         </View>
@@ -168,7 +198,7 @@ const RegisterScreen = () => {
                 width: 300,
                 fontSize: email ? 16 : 16,
               }}
-              placeholder="enter your Password"
+              placeholder="Enter Your Password"
             />
           </View>
         </View>
@@ -181,11 +211,6 @@ const RegisterScreen = () => {
             justifyContent: "space-between",
           }}
         >
-          <Text>Keep me logged in</Text>
-
-          <Text style={{ color: "#007FFF", fontWeight: "500" }}>
-            Forgot Password
-          </Text>
         </View>
 
         <View style={{ marginTop: 80 }} />
@@ -194,7 +219,7 @@ const RegisterScreen = () => {
           onPress={handleRegister}
           style={{
             width: 200,
-            backgroundColor: "#FEBE10",
+            backgroundColor: primaryColor,
             borderRadius: 6,
             marginLeft: "auto",
             marginRight: "auto",

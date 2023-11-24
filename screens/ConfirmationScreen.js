@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { cleanCart } from "../redux/CartReducer";
 import { useNavigation } from "@react-navigation/native";
 import RazorpayCheckout from "react-native-razorpay";
+import { BASE_API_URL } from "@env";
+import { secondaryColor } from "../assets/colors";
 
 const ConfirmationScreen = () => {
   const steps = [
@@ -30,13 +32,13 @@ const ConfirmationScreen = () => {
   const fetchAddresses = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/addresses/${userId}`
+        `${BASE_API_URL}/api/v1/addresses/${userId}`
       );
       const { addresses } = response.data;
 
       setAddresses(addresses);
     } catch (error) {
-      console.log("error", error);
+      console.log("error while fetching address", error);
     }
   };
   const dispatch = useDispatch();
@@ -45,16 +47,18 @@ const ConfirmationScreen = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const handlePlaceOrder = async () => {
     try {
-      const orderData = {
-        userId: userId,
-        cartItems: cart,
-        totalPrice: total,
-        shippingAddress: selectedAddress,
-        paymentMethod: selectedOption,
-      };
+      let orderItems = cart.map(item => {return item.orderItem})
 
+      const orderData = {
+        user: userId,
+        orderItems,
+        status:"Q",
+        //totalPrice: total,
+        shippingAddress: addresses?.length > 0 && addresses[0],
+        
+      };
       const response = await axios.post(
-        "http://localhost:8000/orders",
+        `${BASE_API_URL}/api/v1/orders`,
         orderData
       );
       if (response.status === 200) {
@@ -65,56 +69,56 @@ const ConfirmationScreen = () => {
         console.log("error creating order", response.data);
       }
     } catch (error) {
-      console.log("errror", error);
+      console.log("errror while placing order: ", error);
     }
   };
-  const pay = async () => {
-    try {
-      const options = {
-        description: "Adding To Wallet",
-        currency: "INR",
-        name: "Amazon",
-        key: "rzp_test_E3GWYimxN7YMk8",
-        amount: total * 100,
-        prefill: {
-          email: "void@razorpay.com",
-          contact: "9191919191",
-          name: "RazorPay Software",
-        },
-        theme: { color: "#F37254" },
-      };
+  // const pay = async () => {
+  //   try {
+  //     const options = {
+  //       description: "Adding To Wallet",
+  //       currency: "INR",
+  //       name: "Amazon",
+  //       key: "rzp_test_E3GWYimxN7YMk8",
+  //       amount: total * 100,
+  //       prefill: {
+  //         email: "void@razorpay.com",
+  //         contact: "9191919191",
+  //         name: "RazorPay Software",
+  //       },
+  //       theme: { color: "#F37254" },
+  //     };
 
-      const data = await RazorpayCheckout.open(options);
+  //     const data = await RazorpayCheckout.open(options);
 
-      console.log(data)
+  //     console.log(data)
 
-      const orderData = {
-        userId: userId,
-        cartItems: cart,
-        totalPrice: total,
-        shippingAddress: selectedAddress,
-        paymentMethod: "card",
-      };
+  //     const orderData = {
+  //       userId: userId,
+  //       cartItems: cart,
+  //       totalPrice: total,
+  //       shippingAddress: selectedAddress,
+  //       paymentMethod: "card",
+  //     };
 
-      const response = await axios.post(
-        "http://localhost:8000/orders",
-        orderData
-      );
-      if (response.status === 200) {
-        navigation.navigate("Order");
-        dispatch(cleanCart());
-        console.log("order created successfully", response.data);
-      } else {
-        console.log("error creating order", response.data);
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
+  //     const response = await axios.post(
+  //       `${BASE_API_URL}/api/v1/orders`,
+  //       orderData
+  //     );
+  //     if (response.status === 200) {
+  //       navigation.navigate("Order");
+  //       dispatch(cleanCart());
+  //       console.log("order created successfully", response.data);
+  //     } else {
+  //       console.log("error creating order", response.data);
+  //     }
+  //   } catch (error) {
+  //     console.log("error", error);
+  //   }
+  // };
   return (
     <ScrollView style={{ marginTop: 55 }}>
       <View style={{ flex: 1, paddingHorizontal: 20, paddingTop: 40 }}>
-        <View
+        {/* <View
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -164,10 +168,10 @@ const ConfirmationScreen = () => {
               </Text>
             </View>
           ))}
-        </View>
+        </View> */}
       </View>
 
-      {currentStep == 0 && (
+      {/* {currentStep == 0 && (
         <View style={{ marginHorizontal: 20 }}>
           <Text style={{ fontSize: 16, fontWeight: "bold" }}>
             Select Delivery Address
@@ -442,9 +446,9 @@ const ConfirmationScreen = () => {
             <Text>Continue</Text>
           </Pressable>
         </View>
-      )}
+      )} */}
 
-      {currentStep === 3 && selectedOption === "cash" && (
+      {/* {currentStep === 3 && selectedOption === "cash" && ( */}
         <View style={{ marginHorizontal: 20 }}>
           <Text style={{ fontSize: 20, fontWeight: "bold" }}>Order Now</Text>
 
@@ -538,7 +542,7 @@ const ConfirmationScreen = () => {
             </View>
           </View>
 
-          <View
+          {/* <View
             style={{
               backgroundColor: "white",
               padding: 8,
@@ -552,12 +556,12 @@ const ConfirmationScreen = () => {
             <Text style={{ fontSize: 16, fontWeight: "600", marginTop: 7 }}>
               Pay on delivery (Cash)
             </Text>
-          </View>
+          </View> */}
 
           <Pressable
             onPress={handlePlaceOrder}
             style={{
-              backgroundColor: "#FFC72C",
+              backgroundColor: secondaryColor,
               padding: 10,
               borderRadius: 20,
               justifyContent: "center",
@@ -568,7 +572,7 @@ const ConfirmationScreen = () => {
             <Text>Place your order</Text>
           </Pressable>
         </View>
-      )}
+      {/* //)} */}
     </ScrollView>
   );
 };

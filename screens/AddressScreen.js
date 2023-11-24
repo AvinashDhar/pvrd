@@ -13,6 +13,7 @@ import jwt_decode from "jwt-decode"
 import { UserType } from "../UserContext";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
+import { BASE_API_URL } from '@env';
 
 const AddressScreen = () => {
     const navigation = useNavigation();
@@ -33,7 +34,7 @@ const AddressScreen = () => {
 
     fetchUser();
   },[]);
-  console.log(userId)
+  
   const handleAddAddress = () => {
       const address = {
           name,
@@ -43,8 +44,8 @@ const AddressScreen = () => {
           landmark,
           postalCode
       }
-
-      axios.post("http://localhost:8000/addresses",{userId,address}).then((response) => {
+      
+      axios.post(`${BASE_API_URL}/api/v1/addresses`,{userId,address}).then((response) => {
           Alert.alert("Success","Addresses added successfully");
           setName("");
           setMobileNo("");
@@ -58,7 +59,7 @@ const AddressScreen = () => {
           },500)
       }).catch((error) => {
           Alert.alert("Error","Failed to add address")
-          console.log("error",error)
+          console.log("error while creating address: ",error)
       })
   }
   return (

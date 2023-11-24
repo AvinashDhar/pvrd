@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   TextInput,
   Pressable,
+  Alert
 } from "react-native";
 import React, { useState,useEffect } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -15,10 +16,13 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import { primaryColor, secondaryColor } from "../assets/colors";
+import {BASE_API_URL} from '@env';
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
+  
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
@@ -28,40 +32,41 @@ const LoginScreen = () => {
           navigation.replace("Main");
         }
       } catch (err) {
-        console.log("error message", err);
+        console.log("error while checking login status: ", err);
       }
     };
     checkLoginStatus();
   }, []);
+
   const handleLogin = () => {
     const user = {
       email: email,
       password: password,
     };
 
-    axios
-      .post("http://localhost:8000/login", user)
+    axios  
+      .post(`${BASE_API_URL}/api/v1/users/login`, user)
       .then((response) => {
-        console.log(response);
+        console.log("response after login: ",response);
         const token = response.data.token;
         AsyncStorage.setItem("authToken", token);
         navigation.replace("Main");
       })
       .catch((error) => {
-        Alert.alert("Login Error", "Invalid Email");
-        console.log(error);
+        Alert.alert("Login Error", 
+        error.message.includes(403) ? "Access Denied! Please contact PVRD Administrator" : 
+        error.message.includes(401) ? "Invalid Email or Password!": "Something went  wrong! Please try again after sometime.");
+        console.log("error while logging in... :",error)
       });
   };
   return (
     <SafeAreaView
-      style={{ flex: 1, backgroundColor: "white", alignItems: "center",marginTop:50 }}
+      style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}
     >
       <View>
         <Image
           style={{ width: 150, height: 100 }}
-          source={{
-            uri: "https://assets.stickpng.com/thumbs/6160562276000b00045a7d97.png",
-          }}
+          source={require('../assets/pvrd-logo.png')}
         />
       </View>
 
@@ -107,7 +112,7 @@ const LoginScreen = () => {
                 width: 300,
                 fontSize: email ? 16 : 16,
               }}
-              placeholder="enter your Email"
+              placeholder="Enter Your Email"
             />
           </View>
         </View>
@@ -141,12 +146,12 @@ const LoginScreen = () => {
                 width: 300,
                 fontSize: password ? 16 : 16,
               }}
-              placeholder="enter your Password"
+              placeholder="Enter Your Password"
             />
           </View>
         </View>
 
-        <View
+        {/* <View
           style={{
             marginTop: 12,
             flexDirection: "row",
@@ -154,20 +159,18 @@ const LoginScreen = () => {
             justifyContent: "space-between",
           }}
         >
-          <Text>Keep me logged in</Text>
-
-          <Text style={{ color: "#007FFF", fontWeight: "500" }}>
-            Forgot Password
+          <Text style={{ color: 'gray', fontWeight: "500" }}>
+            Forgot Password?
           </Text>
-        </View>
+        </View> */}
 
-        <View style={{ marginTop: 80 }} />
+        <View style={{ marginTop: 30 }} />
 
         <Pressable
           onPress={handleLogin}
           style={{
             width: 200,
-            backgroundColor: "#FEBE10",
+            backgroundColor: primaryColor,
             borderRadius: 6,
             marginLeft: "auto",
             marginRight: "auto",
@@ -191,7 +194,7 @@ const LoginScreen = () => {
           style={{ marginTop: 15 }}
         >
           <Text style={{ textAlign: "center", color: "gray", fontSize: 16 }}>
-            Don't have an account? Sign Up
+            Don't have an account? Register Now!
           </Text>
         </Pressable>
       </KeyboardAvoidingView>

@@ -25,8 +25,12 @@ import { BottomModal, SlideAnimation, ModalContent } from "react-native-modals";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserType } from "../UserContext";
 import jwt_decode from "jwt-decode";
+import { BASE_API_URL } from "@env";
+import { primaryColor, secondaryColor } from "../assets/colors";
+import Search from "../components/Search";
 
 const HomeScreen = () => {
+
   const list = [
     {
       id: "0",
@@ -64,9 +68,9 @@ const HomeScreen = () => {
     },
   ];
   const images = [
-    "https://img.etimg.com/thumb/msid-93051525,width-1070,height-580,imgsize-2243475,overlay-economictimes/photo.jpg",
-    "https://images-eu.ssl-images-amazon.com/images/G/31/img22/Wireless/devjyoti/PD23/Launches/Updated_ingress1242x550_3.gif",
-    "https://images-eu.ssl-images-amazon.com/images/G/31/img23/Books/BB/JULY/1242x550_Header-BB-Jul23.jpg",
+    require('../assets/hero-poster-3.jpg'),
+    require('../assets/hero-poster-2.jpg'),
+    require('../assets/hero-poster-1.jpg'),
   ];
   const deals = [
     {
@@ -133,94 +137,108 @@ const HomeScreen = () => {
       ],
     },
   ];
-  const offers = [
-    {
-      id: "0",
-      title:
-        "Oppo Enco Air3 Pro True Wireless in Ear Earbuds with Industry First Composite Bamboo Fiber, 49dB ANC, 30H Playtime, 47ms Ultra Low Latency,Fast Charge,BT 5.3 (Green)",
-      offer: "72% off",
-      oldPrice: 7500,
-      price: 4500,
-      image:
-        "https://m.media-amazon.com/images/I/61a2y1FCAJL._AC_UL640_FMwebp_QL65_.jpg",
-      carouselImages: [
-        "https://m.media-amazon.com/images/I/61a2y1FCAJL._SX679_.jpg",
-        "https://m.media-amazon.com/images/I/71DOcYgHWFL._SX679_.jpg",
-        "https://m.media-amazon.com/images/I/71LhLZGHrlL._SX679_.jpg",
-        "https://m.media-amazon.com/images/I/61Rgefy4ndL._SX679_.jpg",
-      ],
-      color: "Green",
-      size: "Normal",
-    },
-    {
-      id: "1",
-      title:
-        "Fastrack Limitless FS1 Pro Smart Watch|1.96 Super AMOLED Arched Display with 410x502 Pixel Resolution|SingleSync BT Calling|NitroFast Charging|110+ Sports Modes|200+ Watchfaces|Upto 7 Days Battery",
-      offer: "40%",
-      oldPrice: 7955,
-      price: 3495,
-      image: "https://m.media-amazon.com/images/I/41mQKmbkVWL._AC_SY400_.jpg",
-      carouselImages: [
-        "https://m.media-amazon.com/images/I/71h2K2OQSIL._SX679_.jpg",
-        "https://m.media-amazon.com/images/I/71BlkyWYupL._SX679_.jpg",
-        "https://m.media-amazon.com/images/I/71c1tSIZxhL._SX679_.jpg",
-      ],
-      color: "black",
-      size: "Normal",
-    },
-    {
-      id: "2",
-      title: "Aishwariya System On Ear Wireless On Ear Bluetooth Headphones",
-      offer: "40%",
-      oldPrice: 7955,
-      price: 3495,
-      image: "https://m.media-amazon.com/images/I/41t7Wa+kxPL._AC_SY400_.jpg",
-      carouselImages: ["https://m.media-amazon.com/images/I/41t7Wa+kxPL.jpg"],
-      color: "black",
-      size: "Normal",
-    },
-    {
-      id: "3",
-      title:
-        "Fastrack Limitless FS1 Pro Smart Watch|1.96 Super AMOLED Arched Display with 410x502 Pixel Resolution|SingleSync BT Calling|NitroFast Charging|110+ Sports Modes|200+ Watchfaces|Upto 7 Days Battery",
-      offer: "40%",
-      oldPrice: 24999,
-      price: 19999,
-      image: "https://m.media-amazon.com/images/I/71k3gOik46L._AC_SY400_.jpg",
-      carouselImages: [
-        "https://m.media-amazon.com/images/I/41bLD50sZSL._SX300_SY300_QL70_FMwebp_.jpg",
-        "https://m.media-amazon.com/images/I/616pTr2KJEL._SX679_.jpg",
-        "https://m.media-amazon.com/images/I/71wSGO0CwQL._SX679_.jpg",
-      ],
-      color: "Norway Blue",
-      size: "8GB RAM, 128GB Storage",
-    },
-  ];
+  // const offers = [
+  //   {
+  //     id: "0",
+  //     title:
+  //       "Oppo Enco Air3 Pro True Wireless in Ear Earbuds with Industry First Composite Bamboo Fiber, 49dB ANC, 30H Playtime, 47ms Ultra Low Latency,Fast Charge,BT 5.3 (Green)",
+  //     offer: "72% off",
+  //     oldPrice: 7500,
+  //     price: 4500,
+  //     image:
+  //       "https://m.media-amazon.com/images/I/61a2y1FCAJL._AC_UL640_FMwebp_QL65_.jpg",
+  //     carouselImages: [
+  //       "https://m.media-amazon.com/images/I/61a2y1FCAJL._SX679_.jpg",
+  //       "https://m.media-amazon.com/images/I/71DOcYgHWFL._SX679_.jpg",
+  //       "https://m.media-amazon.com/images/I/71LhLZGHrlL._SX679_.jpg",
+  //       "https://m.media-amazon.com/images/I/61Rgefy4ndL._SX679_.jpg",
+  //     ],
+  //     color: "Green",
+  //     size: "Normal",
+  //   },
+  //   {
+  //     id: "1",
+  //     title:
+  //       "Fastrack Limitless FS1 Pro Smart Watch|1.96 Super AMOLED Arched Display with 410x502 Pixel Resolution|SingleSync BT Calling|NitroFast Charging|110+ Sports Modes|200+ Watchfaces|Upto 7 Days Battery",
+  //     offer: "40%",
+  //     oldPrice: 7955,
+  //     price: 3495,
+  //     image: "https://m.media-amazon.com/images/I/41mQKmbkVWL._AC_SY400_.jpg",
+  //     carouselImages: [
+  //       "https://m.media-amazon.com/images/I/71h2K2OQSIL._SX679_.jpg",
+  //       "https://m.media-amazon.com/images/I/71BlkyWYupL._SX679_.jpg",
+  //       "https://m.media-amazon.com/images/I/71c1tSIZxhL._SX679_.jpg",
+  //     ],
+  //     color: "black",
+  //     size: "Normal",
+  //   },
+  //   {
+  //     id: "2",
+  //     title: "Aishwariya System On Ear Wireless On Ear Bluetooth Headphones",
+  //     offer: "40%",
+  //     oldPrice: 7955,
+  //     price: 3495,
+  //     image: "https://m.media-amazon.com/images/I/41t7Wa+kxPL._AC_SY400_.jpg",
+  //     carouselImages: ["https://m.media-amazon.com/images/I/41t7Wa+kxPL.jpg"],
+  //     color: "black",
+  //     size: "Normal",
+  //   },
+  //   {
+  //     id: "3",
+  //     title:
+  //       "Fastrack Limitless FS1 Pro Smart Watch|1.96 Super AMOLED Arched Display with 410x502 Pixel Resolution|SingleSync BT Calling|NitroFast Charging|110+ Sports Modes|200+ Watchfaces|Upto 7 Days Battery",
+  //     offer: "40%",
+  //     oldPrice: 24999,
+  //     price: 19999,
+  //     image: "https://m.media-amazon.com/images/I/71k3gOik46L._AC_SY400_.jpg",
+  //     carouselImages: [
+  //       "https://m.media-amazon.com/images/I/41bLD50sZSL._SX300_SY300_QL70_FMwebp_.jpg",
+  //       "https://m.media-amazon.com/images/I/616pTr2KJEL._SX679_.jpg",
+  //       "https://m.media-amazon.com/images/I/71wSGO0CwQL._SX679_.jpg",
+  //     ],
+  //     color: "Norway Blue",
+  //     size: "8GB RAM, 128GB Storage",
+  //   },
+  // ];
   const [products, setProducts] = useState([]);
   const navigation = useNavigation();
   const [open, setOpen] = useState(false);
   const [addresses, setAddresses] = useState([]);
-  const [category, setCategory] = useState("jewelery");
+  const [category, setCategory] = useState("");
   const { userId, setUserId } = useContext(UserType);
   const [selectedAddress,setSelectedAdress] = useState("");
-  console.log(selectedAddress)
-  const [items, setItems] = useState([
-    { label: "Men's clothing", value: "men's clothing" },
-    { label: "jewelery", value: "jewelery" },
-    { label: "electronics", value: "electronics" },
-    { label: "women's clothing", value: "women's clothing" },
-  ]);
+  const [categoryItems, setCategoryItems] = useState([]);
+  const [categoryList ,setCategoryList] = useState([]);
+
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCategories = async () => {
       try {
-        const response = await axios.get("https://fakestoreapi.com/products");
+        const response = await axios.get(`${BASE_API_URL}/api/v1/categories/`);
+        let data = response.data.map(category => {
+          return {
+            label: category.name,
+            value: category.id
+          }
+        }) 
+        setCategoryItems(data);
+        setCategoryList(response.data)
+      } catch (error) {
+        console.log("error while fetching categories", error);
+      }
+    };
+    fetchCategories();
+  }, []);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get(`${BASE_API_URL}/api/v1/products/`);
         setProducts(response.data);
       } catch (error) {
-        console.log("error message", error);
+        console.log("error while fetching products", error);
       }
     };
 
-    fetchData();
+    fetchProducts();
   }, []);
   const onGenderOpen = useCallback(() => {
     setCompanyOpen(false);
@@ -236,13 +254,13 @@ const HomeScreen = () => {
   const fetchAddresses = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/addresses/${userId}`
+        `${BASE_API_URL}/addresses/${userId}`
       );
       const { addresses } = response.data;
 
       setAddresses(addresses);
     } catch (error) {
-      console.log("error", error);
+      console.log("error while fetching addresses", error);
     }
   };
   useEffect(() => {
@@ -255,7 +273,6 @@ const HomeScreen = () => {
 
     fetchUser();
   }, []);
-  console.log("address", addresses);
   return (
     <>
       <SafeAreaView
@@ -266,37 +283,7 @@ const HomeScreen = () => {
         }}
       >
         <ScrollView>
-          <View
-            style={{
-              backgroundColor: "#00CED1",
-              padding: 10,
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Pressable
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginHorizontal: 7,
-                gap: 10,
-                backgroundColor: "white",
-                borderRadius: 3,
-                height: 38,
-                flex: 1,
-              }}
-            >
-              <AntDesign
-                style={{ paddingLeft: 10 }}
-                name="search1"
-                size={22}
-                color="black"
-              />
-              <TextInput placeholder="Search Amazon.in" />
-            </Pressable>
-
-            <Feather name="mic" size={24} color="black" />
-          </View>
+          <Search />
 
           <Pressable
             onPress={() => setModalVisible(!modalVisible)}
@@ -305,7 +292,7 @@ const HomeScreen = () => {
               alignItems: "center",
               gap: 5,
               padding: 10,
-              backgroundColor: "#AFEEEE",
+              backgroundColor: secondaryColor,
             }}
           >
             <Ionicons name="location-outline" size={24} color="black" />
@@ -326,17 +313,35 @@ const HomeScreen = () => {
           </Pressable>
 
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {list.map((item, index) => (
+            {categoryList.map((item, index) => (
+              <View style={{    
+                backgroundColor: 'white',
+                elevation: 50,
+                shadowColor: secondaryColor,
+                shadowOpacity: 1,
+                shadowRadius: 3,
+                borderRadius:50,
+                margin: 5,
+                shadowOffset: {width: 10, height: 4}
+               }}>
               <Pressable
                 key={index}
                 style={{
                   margin: 10,
+                  padding:10,
                   justifyContent: "center",
                   alignItems: "center",
+                  
+                  
                 }}
+                onPress={() =>
+                  navigation.navigate("CategoryProducts", {
+                    categoryId: item.id
+                  })
+                }
               >
                 <Image
-                  style={{ width: 50, height: 50, resizeMode: "contain" }}
+                  style={{ width: 60, height: 40, resizeMode: "contain"}}
                   source={{ uri: item.image }}
                 />
 
@@ -346,11 +351,13 @@ const HomeScreen = () => {
                     fontSize: 12,
                     fontWeight: "500",
                     marginTop: 5,
+                    fontFamily: "OpenSans",
                   }}
                 >
                   {item?.name}
                 </Text>
               </Pressable>
+              </View>
             ))}
           </ScrollView>
 
@@ -362,8 +369,49 @@ const HomeScreen = () => {
             inactiveDotColor="#90A4AE"
             ImageComponentStyle={{ width: "100%" }}
           />
+                    <View
+            style={{
+              marginHorizontal: 10,
+              marginTop: 20,
+              width: "45%",
+              marginBottom: open ? 50 : 15,
+            }}
+          >
+            <DropDownPicker
+              style={{
+                borderColor: "#B7B7B7",
+                height: 30,
+                marginBottom: open ? 120 : 15,
+              }}
+              open={open}
+              value={category} //genderValue
+              items={categoryItems}
+              setOpen={setOpen}
+              setValue={setCategory}
+              setItems={setCategoryItems}
+              placeholder="choose category"
+              placeholderStyle={styles.placeholderStyles}
+              onOpen={onGenderOpen}
+              // onChangeValue={onChange}
+              zIndex={3000}
+              zIndexInverse={1000}
+            />
+          </View>
 
-          <Text style={{ padding: 10, fontSize: 18, fontWeight: "bold" }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              flexWrap: "wrap",
+            }}
+          >
+            {products
+              ?.filter((item) => item.category.id === category)
+              .map((item, index) => (
+                <ProductItem item={item} key={item.id} />
+              ))}
+          </View>
+          {/* <Text style={{ padding: 10, fontSize: 18, fontWeight: "bold" }}>
             Trending Deals of the week
           </Text>
 
@@ -400,8 +448,8 @@ const HomeScreen = () => {
                 />
               </Pressable>
             ))}
-          </View>
-
+          </View> */}
+{/* 
           <Text
             style={{
               height: 1,
@@ -409,9 +457,9 @@ const HomeScreen = () => {
               borderWidth: 2,
               marginTop: 15,
             }}
-          />
+          /> */}
 
-          <Text style={{ padding: 10, fontSize: 18, fontWeight: "bold" }}>
+          {/* <Text style={{ padding: 10, fontSize: 18, fontWeight: "bold" }}>
             Today's Deals
           </Text>
 
@@ -465,7 +513,7 @@ const HomeScreen = () => {
                 </View>
               </Pressable>
             ))}
-          </ScrollView>
+          </ScrollView> */}
 
           <Text
             style={{
@@ -476,48 +524,6 @@ const HomeScreen = () => {
             }}
           />
 
-          <View
-            style={{
-              marginHorizontal: 10,
-              marginTop: 20,
-              width: "45%",
-              marginBottom: open ? 50 : 15,
-            }}
-          >
-            <DropDownPicker
-              style={{
-                borderColor: "#B7B7B7",
-                height: 30,
-                marginBottom: open ? 120 : 15,
-              }}
-              open={open}
-              value={category} //genderValue
-              items={items}
-              setOpen={setOpen}
-              setValue={setCategory}
-              setItems={setItems}
-              placeholder="choose category"
-              placeholderStyle={styles.placeholderStyles}
-              onOpen={onGenderOpen}
-              // onChangeValue={onChange}
-              zIndex={3000}
-              zIndexInverse={1000}
-            />
-          </View>
-
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            {products
-              ?.filter((item) => item.category === category)
-              .map((item, index) => (
-                <ProductItem item={item} key={index} />
-              ))}
-          </View>
         </ScrollView>
       </SafeAreaView>
 
@@ -624,7 +630,7 @@ const HomeScreen = () => {
             </Pressable>
           </ScrollView>
 
-          <View style={{ flexDirection: "column", gap: 7, marginBottom: 30 }}>
+          {/* <View style={{ flexDirection: "column", gap: 7, marginBottom: 30 }}>
             <View
               style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
             >
@@ -652,7 +658,7 @@ const HomeScreen = () => {
                 Deliver outside India
               </Text>
             </View>
-          </View>
+          </View> */}
         </ModalContent>
       </BottomModal>
     </>

@@ -18,7 +18,7 @@ app.listen(port, () => {
 });
 
 mongoose
-  .connect("mongodb+srv://sujananand:sujan@cluster0.cueelai.mongodb.net/", {
+  .connect("mongodb+srv://pvrd:pvrd@pvrd1.roppte2.mongodb.net/", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -38,8 +38,8 @@ const sendVerificationEmail = async (email, verificationToken) => {
     // Configure the email service or SMTP details here
     service: "gmail",
     auth: {
-      user: "sujananand0@gmail.com",
-      pass: "wkkjjprzkqxtboju",
+      user: "avinashkumardhar@gmail.com",
+      pass: "ngrljnvsrkigeczm",
     },
   });
 
@@ -48,7 +48,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
     from: "amazon.com",
     to: email,
     subject: "Email Verification",
-    text: `Please click the following link to verify your email: http://localhost:8000/verify/${verificationToken}`,
+    text: `Please click the following link to verify your email: http://192.168.1.3:8000/verify/${verificationToken}`,
   };
 
   // Send the email
@@ -63,6 +63,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
 // ... existing imports and setup ...
 
 app.post("/register", async (req, res) => {
+  res.header( "Access-Control-Allow-Origin" );
   try {
     const { name, email, password } = req.body;
 

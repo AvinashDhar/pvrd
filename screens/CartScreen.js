@@ -17,10 +17,12 @@ import {
   removeFromCart,
 } from "../redux/CartReducer";
 import { useNavigation } from "@react-navigation/native";
+import Search from "../components/Search";
+import { secondaryColor } from "../assets/colors";
 
 const CartScreen = () => {
   const cart = useSelector((state) => state.cart.cart);
-  console.log(cart);
+  console.log("cart :",cart);
   const total = cart
     ?.map((item) => item.price * item.quantity)
     .reduce((curr, prev) => curr + prev, 0);
@@ -37,38 +39,7 @@ const CartScreen = () => {
   const navigation = useNavigation();
   return (
     <ScrollView style={{ marginTop: 55, flex: 1, backgroundColor: "white" }}>
-      <View
-        style={{
-          backgroundColor: "#00CED1",
-          padding: 10,
-          flexDirection: "row",
-          alignItems: "center",
-        }}
-      >
-        <Pressable
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginHorizontal: 7,
-            gap: 10,
-            backgroundColor: "white",
-            borderRadius: 3,
-            height: 38,
-            flex: 1,
-          }}
-        >
-          <AntDesign
-            style={{ paddingLeft: 10 }}
-            name="search1"
-            size={22}
-            color="black"
-          />
-          <TextInput placeholder="Search Amazon.in" />
-        </Pressable>
-
-        <Feather name="mic" size={24} color="black" />
-      </View>
-
+      <Search />
       <View style={{ padding: 10, flexDirection: "row", alignItems: "center" }}>
         <Text style={{ fontSize: 18, fontWeight: "400" }}>Subtotal : </Text>
         <Text style={{ fontSize: 20, fontWeight: "bold" }}>{total}</Text>
@@ -78,7 +49,7 @@ const CartScreen = () => {
       <Pressable
         onPress={() => navigation.navigate("Confirm")}
         style={{
-          backgroundColor: "#FFC72C",
+          backgroundColor: secondaryColor,
           padding: 10,
           borderRadius: 5,
           justifyContent: "center",
@@ -136,12 +107,12 @@ const CartScreen = () => {
                 >
                   {item?.price}
                 </Text>
-                <Image
+                {/* <Image
                   style={{ width: 30, height: 30, resizeMode: "contain" }}
                   source={{
                     uri: "https://assets.stickpng.com/thumbs/5f4924cc68ecc70004ae7065.png",
                   }}
-                />
+                /> */}
                 <Text style={{ color: "green" }}>In Stock</Text>
                 {/* <Text style={{ fontWeight: "500", marginTop: 6 }}>
                   {item?.rating?.rate} ratings

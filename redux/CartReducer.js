@@ -7,14 +7,34 @@ export const CartSlice = createSlice({
   },
   reducers: {
     addToCart: (state, action) => {
-      const itemPresent = state.cart.find(
-        (item) => item.id === action.payload.id
-      );
-      if (itemPresent) {
-        itemPresent.quantity++;
-      } else {
-        state.cart.push({ ...action.payload, quantity: 1 });
-      }
+      // const itemPresent = state.cart.find(
+      //   (item) => item.id === action.payload.id
+      // );
+      
+      //state.cart.push(...action.payload)
+      // if (itemPresent) {
+      //   itemPresent.quantity++;
+      // } else {
+      //   state.cart.push(...action.payload );
+      // }
+
+      let newItems = [...state.cart];
+      action.payload.map(item => {
+        const notInArray = newItems.every(obj => {
+          return obj.id !== item.id;
+        });
+        if(notInArray){
+          newItems.push(item);
+        } 
+        else{
+          newItems = newItems.filter(data => data.id != item.id);
+          newItems.push(item);
+        }
+      });
+      state.cart = newItems
+
+      
+
     },
     removeFromCart: (state, action) => {
       const removeItem = state.cart.filter(
